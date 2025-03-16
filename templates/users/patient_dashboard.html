@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Patient Dashboard</h1>
+  <p>Welcome, {{ request.user.username }}!</p>
+  <ul>
+    <li><a href="#">View Medical History</a></li>
+    <li><a href="#">Book an Appointment</a></li>
+  </ul>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="flex items-center justify-center h-screen">
+    <div class="card w-96 bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h2 class="card-title">Login</h2>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-control">
+                    <label class="label">Username</label>
+                    <input type="text" name="username" class="input input-bordered" required>
+                </div>
+                <div class="form-control">
+                    <label class="label">Password</label>
+                    <input type="password" name="password" class="input input-bordered" required>
+                </div>
+                <button class="btn btn-primary w-full mt-4">Login</button>
+            </form>
+            <p class="mt-4 text-center">
+                <a href="{% url 'password_reset' %}" class="link link-primary">Forgot Password?</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

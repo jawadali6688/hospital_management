@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Hospital Portal{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.4.0/dist/full.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+    <!-- ✅ Navbar -->
+    <nav class="navbar bg-gray-800 text-white px-6 py-4">
+        <div class="flex-1">
+            <a href="/" class="text-xl font-bold">Hospital Portal</a>
+        </div>
+        <div>
+            {% if user.is_authenticated %}
+                <span class="mr-4">Welcome, {{ user.username }}!</span>
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-error">Logout</button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-primary mr-2">Login</a>
+                <a href="{% url 'register' %}" class="btn btn-secondary">Register</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- ✅ Main Content -->
+    <div class="container mx-auto mt-6">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- ✅ Footer -->
+    <footer class="bg-blue-500 text-white text-center p-4 mt-6">
+        &copy; 2025 Hospital Portal. All rights reserved.
+    </footer>
+
+</body>
+</html>
+
