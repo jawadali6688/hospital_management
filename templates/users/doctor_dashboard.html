@@ -1,10 +1,63 @@
 {% extends "base.html" %}
+
 {% block content %}
-  <h1>Doctor Dashboard</h1>
-  <p>Welcome, Dr. {{ request.user.username }}!</p>
-  <ul>
-    <li><a href="#">View Patients</a></li>
-    <li><a href="#">Manage Appointments</a></li>
-    <li><a href="#">Chat with Guardians</a></li>
-  </ul>
+<div class="container mx-auto p-6">
+    <h1 class="text-2xl font-bold mb-4">👨‍⚕️ Doctor Dashboard</h1>
+
+    <!-- Doctor Info Section -->
+    <div class="card bg-base-100 shadow-xl p-4">
+        <h2 class="text-xl font-semibold">Doctor Profile</h2>
+        <p><strong>Name:</strong> {{ request.user.username }}</p>
+        <p><strong>Email:</strong> {{ request.user.email }}</p>
+        <p><strong>Specialization:</strong> {{ request.user.doctor_profile.specialization }}</p>
+        <p><strong>Experience:</strong> {{ request.user.doctor_profile.experience }} years</p>
+    </div>
+
+    <!-- Patients List -->
+    <div class="mt-6">
+        <h2 class="text-xl font-semibold">Assigned Patients</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for patient in patients %}
+            <div class="card bg-base-200 shadow-lg p-4">
+                <h3 class="text-lg font-semibold">{{ patient.user.username }}</h3>
+                <p><strong>Medical History:</strong> {{ patient.medical_history }}</p>
+                <p><strong>Guardian:</strong> {{ patient.user.guardian_profile.user.username }}</p>
+                <a href="{% url 'patient_detail' patient.id %}" class="btn btn-primary mt-2">View Details</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto p-6">
+    <h1 class="text-2xl font-bold mb-4">👨‍⚕️ Doctor Dashboard</h1>
+
+    <!-- Doctor Info Section -->
+    <div class="card bg-base-100 shadow-xl p-4">
+        <h2 class="text-xl font-semibold">Doctor Profile</h2>
+        <p><strong>Name:</strong> {{ request.user.username }}</p>
+        <p><strong>Email:</strong> {{ request.user.email }}</p>
+        <p><strong>Specialization:</strong> {{ request.user.doctor_profile.specialization }}</p>
+        <p><strong>Experience:</strong> {{ request.user.doctor_profile.experience }} years</p>
+    </div>
+
+    <!-- Patients List -->
+    <div class="mt-6">
+        <h2 class="text-xl font-semibold">📝 Assigned Patients</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for patient in patients %}
+            <div class="card bg-base-200 shadow-lg p-4">
+                <h3 class="text-lg font-semibold">{{ patient.user.username }}</h3>
+                <p><strong>Medical History:</strong> {{ patient.medical_history }}</p>
+                <p><strong>Guardian:</strong> {{ patient.user.guardian_profile.user.username }}</p>
+                <a href="{% url 'patient_detail' patient.id %}" class="btn btn-primary mt-2">View Details</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 {% endblock %}

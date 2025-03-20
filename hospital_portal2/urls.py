@@ -29,12 +29,12 @@ Including another URLconf
 #     path('guardian/dashboard/', views.guardian_dashboard, name='guardian_dashboard'),
 # ]
 from django.contrib import admin
-from django.urls import path, include  #  `include` ka sahi use karo
-from users.views import home  #  Home view import karein
+from django.urls import path, include
+from users.views import home, dashboard_redirect  # 👈 Import dashboard_redirect
 
 urlpatterns = [
-    path("admin/", admin.site.urls),  
-
-    path('', home, name='home'),  #  Default homepag
-    path("users/", include("users.urls")),  #  Ye line handle karegi users ke saare URLs
+    path("admin/", admin.site.urls),
+    path("", home, name="home"),
+    path("users/", include("users.urls")),
+    path("dashboard_redirect/", dashboard_redirect, name="dashboard_redirect"),  # 👈 Add this line
 ]

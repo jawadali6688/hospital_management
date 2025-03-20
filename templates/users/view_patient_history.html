@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto p-6">
+    <h2 class="text-2xl font-bold">Patient History</h2>
+
+    <div class="mt-4 bg-white shadow-md rounded-lg p-4">
+        <h3 class="text-lg font-semibold">Patient Details</h3>
+        <p><strong>Name:</strong> {{ patient.user.username }}</p>
+        <p><strong>Email:</strong> {{ patient.user.email }}</p>
+        <p><strong>Medical History:</strong> {{ patient.medical_history }}</p>
+
+        {% if patient.assigned_doctor %}
+            <h3 class="mt-4 text-lg font-semibold">Assigned Doctor</h3>
+            <p><strong>Doctor Name:</strong> {{ patient.assigned_doctor.user.username }}</p>
+            <p><strong>Specialization:</strong> {{ patient.assigned_doctor.specialization }}</p>
+            <p><strong>Experience:</strong> {{ patient.assigned_doctor.experience }} years</p>
+            <p><strong>Phone:</strong> {{ patient.assigned_doctor.phone }}</p>
+        {% else %}
+            <p class="text-red-500">No doctor assigned yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

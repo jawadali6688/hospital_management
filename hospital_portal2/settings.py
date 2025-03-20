@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-import os  # ✅ Ensure karein os import ho
+import os  #  Ensure karein os import ho
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -59,7 +59,7 @@ ROOT_URLCONF = 'hospital_portal2.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # ✅ Ensure correct path
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  #  Ensure correct path
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -126,8 +126,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = 'users.CustomUser'
 LOGIN_URL = "/users/login/"
-LOGIN_REDIRECT_URL = "/users/accounts/" 
 LOGOUT_REDIRECT_URL = '/users/login/'
+LOGIN_REDIRECT_URL = "/dashboard_redirect/"
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/

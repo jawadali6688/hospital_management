@@ -1,6 +1,6 @@
 # # from django.urls import path
 # from django.contrib.auth import views as auth_views
-# from . import views  # ✅ Yeh sari views ek saath import kar raha hai
+# from . import views  #  Yeh sari views ek saath import kar raha hai
 
 # urlpatterns = [
 #     path("register/", views.register, name="register"),
@@ -20,18 +20,34 @@
 #     path("reset/<uidb64>/<token>/", auth_views.PasswordResetConfirmView.as_view(template_name="users/password_reset_confirm.html"), name="password_reset_confirm"),
 #     path("reset/done/", auth_views.PasswordResetCompleteView.as_view(template_name="users/password_reset_complete.html"), name="password_reset_complete"),
 # ]
+
+
+
+
+
+
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from . import views  # ✅ Yeh sari views ek saath import kar raha hai
+from . import views  #  Import all views from the app
 
 urlpatterns = [
+    # Registration & Dashboard
     path("register/", views.register, name="register"),
-    path("accounts/", views.dashboard_redirect, name="dashboard_redirect"),
+    # path("accounts/", views.dashboard_redirect, name="dashboard_redirect"),
+    path("dashboard_redirect/", views.dashboard_redirect, name="dashboard_redirect"),
+
     path("dashboard/", views.dashboard_view, name="dashboard"),
+
+    # Temporary Role Assignment
     path("assign_temporary_role/", views.assign_temporary_role, name="assign_temporary_role"),
+
+    # Dashboards
     path("doctor/dashboard/", views.doctor_dashboard, name="doctor_dashboard"),
     path("patient/dashboard/", views.patient_dashboard, name="patient_dashboard"),
     path("guardian/dashboard/", views.guardian_dashboard, name="guardian_dashboard"),
+
+    # 🔹 New: View a specific Patient's History (For Doctors, Guardians, Admin, Super Admin)
+    path("patient/history/<int:patient_id>/", views.view_patient_history, name="view_patient_history"),
 
     # Authentication URLs
     path("login/", auth_views.LoginView.as_view(template_name="users/login.html"), name="login"),

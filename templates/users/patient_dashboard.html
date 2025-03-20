@@ -1,9 +1,29 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1>Patient Dashboard</h1>
-  <p>Welcome, {{ request.user.username }}!</p>
-  <ul>
-    <li><a href="#">View Medical History</a></li>
-    <li><a href="#">Book an Appointment</a></li>
-  </ul>
+<div class="container mx-auto p-6">
+    <h2 class="text-2xl font-bold">Patient Dashboard</h2>
+
+    {% if patient %}
+        <div class="mt-4 bg-white shadow-md rounded-lg p-4">
+            <h3 class="text-lg font-semibold">Patient Details</h3>
+            <p><strong>Name:</strong> {{ request.user.username }}</p>
+            <p><strong>Email:</strong> {{ request.user.email }}</p>
+            <p><strong>Medical History:</strong> {{ patient.medical_history }}</p>
+
+            {% if patient.assigned_doctor %}
+                <h3 class="mt-4 text-lg font-semibold">Assigned Doctor</h3>
+                <p><strong>Doctor Name:</strong> {{ patient.assigned_doctor.user.username }}</p>
+                <p><strong>Specialization:</strong> {{ patient.assigned_doctor.specialization }}</p>
+                <p><strong>Experience:</strong> {{ patient.assigned_doctor.experience }} years</p>
+                <p><strong>Phone:</strong> {{ patient.assigned_doctor.phone }}</p>
+            {% else %}
+                <p class="text-red-500">No doctor assigned yet.</p>
+            {% endif %}
+
+            <a href="{% url 'view_patient_history' patient.id %}" class="btn btn-primary mt-4">View Full History</a>
+        </div>
+    {% else %}
+        <p class="text-red-500">You are not registered as a patient.</p>
+    {% endif %}
+</div>
 {% endblock %}

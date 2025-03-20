@@ -15,9 +15,9 @@ class RoleRequiredMiddleware:
                 return redirect("/users/login/")
 
             role_redirects = {
-                "doctor": "/doctor/",
-                "patient": "/patient/",
-                "guardian": "/guardian/",
+                "doctor": "/users/doctor/dashboard",
+                "patient": "/users/patient/dashboard",
+                "guardian": "/users/guardian/dashboard",
             }
 
             if request.user.role in role_redirects and not current_path.startswith(role_redirects[request.user.role]):
