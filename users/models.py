@@ -23,14 +23,18 @@ class Doctor(models.Model):
     experience = models.IntegerField()
     phone = models.CharField(max_length=15)
 
-class Patient(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="patient_profile")
-    medical_history = models.TextField()
-    assigned_doctor = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True, blank=True)
+
 
 class Guardian(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="guardian_profile")
     phone = models.CharField(max_length=15)
+
+class Patient(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="patient_profile")
+    medical_history = models.TextField()
+    assigned_doctor = models.ForeignKey(Doctor, on_delete=models.SET_NULL, null=True, blank=True)
+    doctors = models.ManyToManyField(Doctor, related_name="patients", blank=True)  # ✅ Fixed reverse query issue
+    guardian = models.ForeignKey(Guardian, on_delete=models.SET_NULL, null=True, blank=True, related_name="patients")  # ✅ One guardian per patient
 
 class TemporaryRole(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
