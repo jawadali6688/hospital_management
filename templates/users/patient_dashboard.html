@@ -3,14 +3,14 @@
 <div class="container mx-auto p-6">
     <h2 class="text-2xl font-bold">Patient Dashboard</h2>
 
-    {% if patient %}
+    {% if user %}
         <div class="mt-4 bg-white shadow-md rounded-lg p-4">
             <h3 class="text-lg font-semibold">Patient Details</h3>
-            <p><strong>Name:</strong> {{ request.user.username }}</p>
-            <p><strong>Email:</strong> {{ request.user.email }}</p>
-            <p><strong>Medical History:</strong> {{ patient.medical_history }}</p>
+            <p><strong>Name:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Medical History:</strong> {{patient_history.medical_history }}</p>
 
-            {% if patient.assigned_doctor %}
+            {% comment %} {% if patient_history.assigned_doctor %}
                 <h3 class="mt-4 text-lg font-semibold">Assigned Doctor</h3>
                 <p><strong>Doctor Name:</strong> {{ patient.assigned_doctor.user.username }}</p>
                 <p><strong>Specialization:</strong> {{ patient.assigned_doctor.specialization }}</p>
@@ -18,9 +18,15 @@
                 <p><strong>Phone:</strong> {{ patient.assigned_doctor.phone }}</p>
             {% else %}
                 <p class="text-red-500">No doctor assigned yet.</p>
-            {% endif %}
-
-            <a href="{% url 'view_patient_history' patient.id %}" class="btn btn-primary mt-4">View Full History</a>
+            {% endif %} {% endcomment %}
+ {% for doctor in doctors%}
+ <p><strong>Doctor Name:</strong> {{ doctor.user.username }}</p>
+                <p><strong>Specialization:</strong> {{ doctor.specialization }}</p>
+                <p><strong>Experience:</strong> {{ doctor.experience }} years</p>
+                <p><strong>Phone:</strong> {{ doctor.phone }}</p>
+ {% endfor %}
+    <h1> {{patient_history.assigned_doctors}}</h1>
+            {% comment %} <a href="{% url 'view_patient_history' patient.id %}" class="btn btn-primary mt-4">View Full History</a> {% endcomment %}
         </div>
     {% else %}
         <p class="text-red-500">You are not registered as a patient.</p>

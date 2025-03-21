@@ -8,7 +8,8 @@ class RoleRequiredMiddleware:
         if request.user.is_authenticated:
             current_path = request.path
 
-            if current_path in ["/", "/admin/", "/users/login/", "/users/register"]:
+            if current_path in ["/", "/admin/", "/users/login/", "/users/register","users/register","/users/logout/","/users/patient/history/*"]:
+            
                 return self.get_response(request)
 
             if current_path.startswith("/admin/") and not request.user.is_superuser:

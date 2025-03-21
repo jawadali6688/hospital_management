@@ -10,7 +10,9 @@
         <p><strong>Email:</strong> {{ patient.user.email }}</p>
         <p><strong>Medical History:</strong> {{ patient.medical_history }}</p>
 
-        {% if patient.assigned_doctor %}
+        {% comment %} {% if patient.assigned_doctor %} {% endcomment %}
+        {% if patient.assigned_doctors.all %}
+
             <h3 class="mt-4 text-lg font-semibold">Assigned Doctor</h3>
             <p><strong>Doctor Name:</strong> {{ patient.assigned_doctor.user.username }}</p>
             <p><strong>Specialization:</strong> {{ patient.assigned_doctor.specialization }}</p>

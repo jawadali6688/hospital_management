@@ -52,27 +52,53 @@ def dashboard_view(request):
 
 
 # Doctor Dashboard (Only Doctors Allowed)
+# @login_required
+# @role_required(allowed_roles=['doctor'])
+# def doctor_dashboard(request):
+#     if request.user.role != 'doctor':
+#         return HttpResponseForbidden("searching....")
+
+#     # Iss doctor ke assigned patients
+#     patients = Patient.objects.filter(assigned_doctor=request.user.doctor_profile)
+
+#     return render(request, 'users/doctor_dashboard.html', {'patients': patients})
+
+# @login_required
+# @role_required(allowed_roles=['doctor'])
+# def doctor_dashboard(request):
+#     # Ensure user has a doctor profile
+#     if not hasattr(request.user, 'doctor_profile'):
+#         return HttpResponseForbidden("You do not have permission to access this page.")
+
+#     # Fetch assigned patients for the logged-in doctor
+#     patients = Patient.objects.filter(assigned_doctors=request.user)
+
+#     return render(request, 'users/doctor_dashboard.html', {'patients': patients})
 @login_required
 @role_required(allowed_roles=['doctor'])
 def doctor_dashboard(request):
-    if request.user.role != 'doctor':
-        return HttpResponseForbidden("searching....")
-
+    doctor_profile = get_object_or_404(Doctor, user=request.user)
+    
     # Iss doctor ke assigned patients
-    patients = Patient.objects.filter(assigned_doctor=request.user.doctor_profile)
+    patients = Patient.objects.filter(assigned_doctors=doctor_profile)
 
-    return render(request, 'users/doctor_dashboard.html', {'patients': patients})
-
+    return render(request, 'users/doctor_dashboard.html', {
+        'doctor': doctor_profile,
+        'patients': patients
+    })
 
 # Patient Dashboard (Only Patients Allowed)
 @login_required
 @role_required(allowed_roles=['patient'])
 def patient_dashboard(request):
-     if request.user.role != 'patient':
+    patient_history=get_object_or_404(Patient,user=request.user)
+    doctors=patient_history.assigned_doctors.all()
+    print(patient_history.assigned_doctors,"jawadkhan")
+    if request.user.role != 'patient':
         return HttpResponseForbidden("page reload.")
 
  
-     return render(request, 'users/patient_dashboard.html')
+    return render(request, 'users/patient_dashboard.html',{"patient_history":patient_history,"doctors":doctors})
 
 
 # Guardian Dashboard (Only Guardians Allowed)
@@ -83,17 +109,35 @@ def guardian_dashboard(request):
 
 
 # View Patient History (For Doctors, Guardians, Admins, Super Admins)
+# @login_required
+
+# def view_patient_history(request, patient_id):
+#     patient = get_object_or_404(Patient, id=patient_id)
+#     if (
+#         request.user == patient.assigned_doctor.user
+#         or hasattr(request.user, 'guardian_profile')  # Guardian access
+#         or request.user.role in ['admin', 'super_admin']  # Admin & Super Admin access
+#     ):
+#         return render(request, 'users/view_patient_history.html', {'patient': patient})
+    
+#     return render(request, '403.html')
+
 @login_required
+@role_required(allowed_roles=['doctor', 'admin', 'super_admin'])
 def view_patient_history(request, patient_id):
     patient = get_object_or_404(Patient, id=patient_id)
-    if (
-        request.user == patient.assigned_doctor.user
-        or hasattr(request.user, 'guardian_profile')  # Guardian access
-        or request.user.role in ['admin', 'super_admin']  # Admin & Super Admin access
-    ):
-        return render(request, 'users/view_patient_history.html', {'patient': patient})
-    
-    return render(request, '403.html')
+# Debugging ke liye print karein
+    print("Assigned Doctors:", patient.assigned_doctors.all())  
+    print("Current Doctor Profile:", request.user.doctor_profile)
+    # Check if current doctor is assigned to this patient
+    if request.user.role == 'doctor' and request.user.doctor_profile not in patient.assigned_doctors.all():
+        return HttpResponseForbidden("You do not have permission to view this patient's history.")
+
+    return render(request, 'users/view_patient_history.html', {'patient': patient})
+
+
+
+
     #  Access Control: Only Allowed Roles Can View
     # if not (
     #     request.user.is_superuser or
