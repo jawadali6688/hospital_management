@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="flex justify-center items-center min-h-screen bg-[#121212] text-gray-300 p-6">
+    <div class="w-full max-w-3xl  shadow-lg rounded-lg p-6">
+        <h2 class="text-2xl font-bold text-orange-400 mb-4">📜 Patient History</h2>
+
+        <!-- Patient Details -->
+        <div class="bg-[#1E1E1E] p-5 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold text-orange-300">👤 Patient Details</h3>
+            <p class="mt-2"><strong class="text-orange-400">Name:</strong> {{ patient.user.username }}</p>
+            <p><strong class="text-orange-400">Email:</strong> {{ patient.user.email }}</p>
+            <p class="mt-2"><strong class="text-orange-400">🩺 Medical History:</strong></p>
+            <p class="bg-gray-700 p-3 rounded-md mt-2">{{ patient.medical_history }}</p>
+        </div>
+
+        <!-- Assigned Doctor -->
+        {% if patient.assigned_doctors.all %}
+        <div class="bg-[#1E1E1E] p-5 rounded-lg shadow-md mt-6">
+            <h3 class="text-lg font-semibold text-orange-300">🩺 Assigned Doctor</h3>
+            <p class="mt-2"><strong class="text-orange-400">Doctor Name:</strong> {{ patient.assigned_doctor.user.username }}</p>
+            <p><strong class="text-orange-400">Specialization:</strong> {{ patient.assigned_doctor.specialization }}</p>
+            <p><strong class="text-orange-400">Experience:</strong> {{ patient.assigned_doctor.experience }} years</p>
+            <p><strong class="text-orange-400">📞 Phone:</strong> {{ patient.assigned_doctor.phone }}</p>
+        </div>
+        {% else %}
+        <p class="mt-4 text-red-400 text-center bg-gray-800 p-3 rounded-lg">🚫 No doctor assigned yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

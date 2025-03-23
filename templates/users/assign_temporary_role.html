@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Assign Temporary Role{% endblock %}
+
+{% block content %}
+<div class="container mx-auto mt-6 p-6 bg-white shadow-lg rounded-lg">
+    <h2 class="text-2xl font-bold mb-4">Assign Temporary Role</h2>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <label class="block mb-2">Select User:</label>
+        <select name="user_id" class="input input-bordered w-full mb-4">
+            {% for user in users %}
+                <option value="{{ user.id }}">{{ user.username }}</option>
+            {% endfor %}
+        </select>
+        
+        <label class="block mb-2">Select Role:</label>
+        <select name="role_id" class="input input-bordered w-full mb-4">
+            {% for role in roles %}
+                <option value="{{ role.id }}">{{ role.name }}</option>
+            {% endfor %}
+        </select>
+
+        <label class="block mb-2">Duration (hours):</label>
+        <input type="number" name="duration" min="1" value="1" class="input input-bordered w-full mb-4">
+
+        <button type="submit" class="btn btn-primary">Assign Role</button>
+    </form>
+</div>
+{% endblock %}
