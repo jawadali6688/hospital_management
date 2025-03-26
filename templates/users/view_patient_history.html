@@ -12,6 +12,15 @@
             <p><strong class="text-orange-400">Email:</strong> {{ patient.user.email }}</p>
             <p class="mt-2"><strong class="text-orange-400">🩺 Medical History:</strong></p>
             <p class="bg-gray-700 p-3 rounded-md mt-2">{{ patient.medical_history }}</p>
+            <p><strong class="text-orange-400">Blood Group:</strong> {{ patient.blood_group }}</p>
+<p><strong class="text-orange-400">Current Medications:</strong> {{ patient.current_medications }}</p>
+<p><strong class="text-orange-400">Last Checkup Date:</strong> {{ patient.last_checkup_date }}</p>
+
+<h3 class="text-lg font-semibold text-orange-300 mt-4">🚨 Emergency Contact</h3>
+<p><strong class="text-orange-400">Name:</strong> {{ patient.emergency_contact_name }}</p>
+<p><strong class="text-orange-400">Phone:</strong> {{ patient.emergency_contact_number }}</p>
+<p><strong class="text-orange-400">Relation:</strong> {{ patient.emergency_contact_relation }}</p>
+
         </div>
 
         <!-- Assigned Doctor -->

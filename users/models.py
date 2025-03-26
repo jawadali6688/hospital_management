@@ -85,6 +85,7 @@ from django.db import models
 from django.conf import settings
 from django.utils.timezone import now
 from django.utils.crypto import get_random_string
+from django.conf import settings  # Correct way to reference custom User model
 
 class CustomUser(AbstractUser):
     ROLE_CHOICES = [
@@ -129,6 +130,16 @@ class Doctor(models.Model):
     specialization = models.CharField(max_length=100)
     experience = models.IntegerField()
     phone = models.CharField(max_length=15)
+    gender = models.CharField(max_length=10, choices=[('Male', 'Male'), ('Female', 'Female')], null=True, blank=True)
+    date_of_birth = models.DateField(null=True, blank=True)
+    license_number = models.CharField(max_length=50, default="TEMP-LICENSE")
+    years_of_experience = models.IntegerField(default=0)
+    available_days = models.CharField(max_length=255, default="Monday to Friday")
+
+    shift_timings = models.CharField(max_length=100, default="9 AM - 5 PM")  # Default added
+    assigned_patients = models.ManyToManyField('Patient', related_name="doctors", blank=True)
+    status = models.CharField(max_length=20, choices=[('Active', 'Active'), ('On Leave', 'On Leave')], default='Active')
+
 
     def __str__(self):
         return f"Dr. {self.user.username} - {self.specialization}"
@@ -137,17 +148,37 @@ class Patient(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="patient_profile")
     medical_history = models.TextField()
     assigned_doctors = models.ManyToManyField(Doctor, blank=True)  # Multiple doctors allowed
+    date_of_birth = models.DateField(null=True, blank=True)
+    gender = models.CharField(max_length=10, choices=[("male", "Male"), ("female", "Female"), ("other", "Other")], null=True, blank=True)
+    contact_number = models.CharField(max_length=15, null=True, blank=True)
+    address = models.TextField(null=True, blank=True)
+    blood_group = models.CharField(max_length=5, choices=[
+        ("A+", "A+"), ("A-", "A-"), ("B+", "B-"), 
+        ("O+", "O-"), ("AB+", "AB-")
+    ], null=True, blank=True)
+    
+    allergies = models.TextField(null=True, blank=True)
+    current_medications = models.TextField(null=True, blank=True)
+    last_checkup_date = models.DateField(null=True, blank=True)
+    
+    emergency_contact_name = models.CharField(max_length=100, null=True, blank=True)
+    emergency_contact_number = models.CharField(max_length=15, null=True, blank=True)
+    emergency_contact_relation = models.CharField(max_length=50, null=True, blank=True)
+    admission_date = models.DateTimeField(null=True, blank=True)
+    discharge_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.username} (Patient)"
 
 class Guardian(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="guardian_profile")
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)  
+
     phone = models.CharField(max_length=15)
-
+    relation = models.CharField(max_length=50, default="Unknown")  # Default value add ki
+    address = models.TextField(default="Update Required")  # Temporary default
     def __str__(self):
-        return f"{self.user.username} (Guardian)"
-
+        return self.user.username
+    
 class TemporaryRole(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     role = models.ForeignKey(Group, on_delete=models.CASCADE)

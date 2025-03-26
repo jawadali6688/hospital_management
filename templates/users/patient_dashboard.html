@@ -42,6 +42,18 @@
                 <p><strong>Name:</strong> {{ user.username }}</p>
                 <p><strong>Email:</strong> {{ user.email }}</p>
                 <p><strong>Medical History:</strong> {{ patient_history.medical_history }}</p>
+                <p><strong>Blood Group:</strong> {{ patient_history.blood_group }}</p>
+                <p><strong>Current Medications:</strong> {{ patient_history.current_medications }}</p>
+                <p><strong>Last Checkup Date:</strong> {{ patient_history.last_checkup_date }}</p>
+
+                {% comment %} <p><strong>Blood Group:</strong> {{ patient.blood_group }}</p>
+                <p><strong>Current Medications:</strong> {{ patient.current_medications }}</p>
+                <p><strong>Last Checkup Date:</strong> {{ patient.last_checkup_date }}</p> {% endcomment %}
+
+                <h3 class="text-lg font-semibold text-orange-400 mt-3">🚨 Emergency Contact</h3>
+                <p><strong>Name:</strong> {{ patient.emergency_contact_name }}</p>
+                <p><strong>Phone:</strong> {{ patient.emergency_contact_number }}</p>
+                <p><strong>Relation:</strong> {{ patient.emergency_contact_relation }}</p>
             </div>
         </div>
 
@@ -76,49 +88,6 @@
                 {% else %}
                     <p class="text-red-400">No medical history available.</p>
                 {% endif %}
-            </div>
-        </div>
-
-        <!-- Guardian Tab -->
-        <div id="guardian" class="tab-content hidden">
-            <div class="bg-[#1E1E1E] p-6 rounded-lg shadow-md">
-                <h3 class="text-lg font-semibold text-orange-400 mb-3">👨‍👩‍👦 Guardian Details</h3>
-                {% if guardian %}
-                    <p><strong>Name:</strong> {{ guardian.name }}</p>
-                    <p><strong>Relation:</strong> {{ guardian.relation }}</p>
-                    <p><strong>Phone:</strong> {{ guardian.phone }}</p>
-                    <p><strong>Address:</strong> {{ guardian.address }}</p>
-                {% else %}
-                    <p class="text-red-400">No guardian details available.</p>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Change Password Tab -->
-        <div id="change-password" class="tab-content hidden">
-            <div class="bg-[#1E1E1E] p-6 rounded-lg shadow-md">
-                <h3 class="text-lg font-semibold text-orange-400 mb-3">🔑 Change Password</h3>
-                <form method="POST">
-                    {% csrf_token %}
-                    <div class="mb-4">
-                        <label class="block font-semibold mb-1">New Password</label>
-                        <input type="password" name="new_password"
-                            class="w-full px-4 py-3 border border-gray-600 rounded-lg 
-                                   focus:outline-none focus:ring-2 focus:ring-orange-500 
-                                   bg-[#252525] text-gray-300" required>
-                    </div>
-                    <div class="mb-4">
-                        <label class="block font-semibold mb-1">Confirm Password</label>
-                        <input type="password" name="confirm_password"
-                            class="w-full px-4 py-3 border border-gray-600 rounded-lg 
-                                   focus:outline-none focus:ring-2 focus:ring-orange-500 
-                                   bg-[#252525] text-gray-300" required>
-                    </div>
-                    <button type="submit"
-                        class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 rounded-lg transition">
-                        🔄 Update Password
-                    </button>
-                </form>
             </div>
         </div>
     </main>

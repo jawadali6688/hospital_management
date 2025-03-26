@@ -80,7 +80,8 @@ def doctor_dashboard(request):
     doctor_profile = get_object_or_404(Doctor, user=request.user)
     
     # Iss doctor ke assigned patients
-    patients = Patient.objects.filter(assigned_doctors=doctor_profile)
+    # patients = Patient.objects.filter(assigned_doctors=doctor_profile)
+    patients = doctor_profile.assigned_patients.all() 
 
     return render(request, 'users/doctor_dashboard.html', {
         'doctor': doctor_profile,
@@ -108,46 +109,38 @@ def guardian_dashboard(request):
     return render(request, 'users/guardian_dashboard.html')
 
 
-# View Patient History (For Doctors, Guardians, Admins, Super Admins)
-# @login_required
-
-# def view_patient_history(request, patient_id):
-#     patient = get_object_or_404(Patient, id=patient_id)
-#     if (
-#         request.user == patient.assigned_doctor.user
-#         or hasattr(request.user, 'guardian_profile')  # Guardian access
-#         or request.user.role in ['admin', 'super_admin']  # Admin & Super Admin access
-#     ):
-#         return render(request, 'users/view_patient_history.html', {'patient': patient})
-    
-#     return render(request, '403.html')
 
 @login_required
 @role_required(allowed_roles=['doctor', 'admin', 'super_admin'])
 def view_patient_history(request, patient_id):
     patient = get_object_or_404(Patient, id=patient_id)
-# Debugging ke liye print karein
-    print("Assigned Doctors:", patient.assigned_doctors.all())  
+
+    # Debugging ke liye print karein
+    print("Assigned Doctors:", patient.doctors.all())  
     print("Current Doctor Profile:", request.user.doctor_profile)
+
     # Check if current doctor is assigned to this patient
-    if request.user.role == 'doctor' and request.user.doctor_profile not in patient.assigned_doctors.all():
+    if request.user.role == 'doctor' and not patient.doctors.filter(id=request.user.doctor_profile.id).exists():
         return HttpResponseForbidden("You do not have permission to view this patient's history.")
 
     return render(request, 'users/view_patient_history.html', {'patient': patient})
 
 
 
+# @login_required
+# @role_required(allowed_roles=['doctor', 'admin', 'super_admin'])
+# def view_patient_history(request, patient_id):
+#     patient = get_object_or_404(Patient, id=patient_id)
 
-    #  Access Control: Only Allowed Roles Can View
-    # if not (
-    #     request.user.is_superuser or
-    #     request.user.role == "admin" or
-    #     (request.user.role == "doctor" and patient.assigned_doctor.user == request.user) or
-    #     (request.user.role == "guardian" and request.user.guardian_profile == patient.user.guardian_profile)
-    # ):
-    #     return HttpResponseForbidden("You do not have permission to view this patient's history.")
+#     print("Assigned Doctors:", patient.assigned_doctors.all())  
+#     print("Current Doctor Profile:", request.user.doctor_profile)
+    
+#     if request.user.role == 'doctor' and request.user.doctor_profile not in patient.assigned_doctors.all():
+#         return HttpResponseForbidden("You do not have permission to view this patient's history.")
 
-    # return render(request, "users/patient_history.html", {"patient": patient})
+#     return render(request, 'users/view_patient_history.html', {'patient': patient})
+
+
 
 
 @login_required
