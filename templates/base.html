@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Hospital Management{% endblock %}</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.4.0/dist/full.css" rel="stylesheet" type="text/css" />
+    <style>
+        body {
+            font-family: "Poppins";
+        }
+    </style>
+</head>
+<body class=" ">
+
+    <!-- ✅ Navbar -->
+    <nav class="bg-[#2B2B2B] text-white shadow-lg rounded-lg fixed top-0 w-full z-50">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <!-- ✅ Logo -->
+            <a href="/" class=" font-extrabold text-orange-600 tracking-tight text-2xl lg:text-4xl">Hospital Portal</a>
+
+            <!-- ✅ Desktop Menu -->
+            <div class="hidden md:flex space-x-6 items-center">
+                {% if user.is_authenticated %}
+                    <span class="text-lg">👋 {{ user.username }}</span>
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="px-6 py-3 text-gray-50 hover:text-gray-100  bg-red-600 hover:bg-red-700 
+                        focus:ring-4 focus:ring-red-300 font-semibold rounded-lg transition-all duration-300 ease-in-out">
+                            Logout
+                        </button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="px-6 py-3 text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:ring-orange-300 
+                    font-semibold rounded-lg shadow-md transition-all duration-300 ease-in-out">
+                        Login
+                    </a>
+                    <a href="{% url 'register' %}" class="px-6 py-3 text-orange-600 border border-orange-600 bg-transparent hover:bg-orange-600 hover:text-white 
+                    focus:ring-4 focus:ring-orange-300 font-semibold rounded-lg shadow-md transition-all duration-300 ease-in-out">
+                        Register
+                    </a>
+                {% endif %}
+            </div>
+
+            <!-- ✅ Mobile Menu Button -->
+            <button id="menu-toggle" class="md:hidden text-4xl focus:outline-none">
+                ☰
+            </button>
+        </div>
+
+        <!-- ✅ Mobile Dropdown -->
+        <div id="mobile-menu" class="hidden flex-col bg-white text-dark px-6 py-4 shadow-md md:hidden">
+            {% if user.is_authenticated %}
+                <div class="py-2 text-lg">👋 {{ user.username }}</div>
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="w-full text-left px-4 py-2 bg-dark text-white bg-red-600 rounded-lg hover:bg-red-800 transition">
+                        Logout
+                    </button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}" class="block px-4 py-2 bg-orange-100 rounded-lg hover:bg-orange-200 transition">Login</a>
+                <a href="{% url 'register' %}" class="block px-4 py-2 bg-dark text-white rounded-lg hover:bg-gray-800 transition">Register</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- ✅ Main Content -->
+    <div 
+    style="margin-top: 80px;"
+    class="  z-0">
+        {% block content %}
+        {% endblock   %}
+    </div>
+
+    <!-- ✅ Footer -->
+    <footer class="bg-[#2B2B2B] mt-10 w-full text-white text-center p-4 ">
+        &copy; 2025 Hospital Portal. All rights reserved.
+    </footer>
+
+    <!-- ✅ Mobile Menu Toggle -->
+    <script>
+        document.getElementById('menu-toggle').addEventListener('click', function () {
+            document.getElementById('mobile-menu').classList.toggle("hidden");
+        });
+    </script>
+
+</body>
+</html>

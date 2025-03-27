@@ -1,0 +1,12 @@
+{% for patient in all_patients %}
+    <tr>
+        <td>{{ patient.name }}</td>
+        <td>{{ patient.age }}</td>
+        <td>{{ patient.condition }}</td>
+        <td>
+            <a href="{% url 'view_patient_history' patient.id %}" class="btn btn-primary">
+                View History
+            </a>
+        </td>
+    </tr>
+{% endfor %}

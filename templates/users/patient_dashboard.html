@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="flex h-screen bg-[#121212] text-gray-300">
+    <!-- Sidebar -->
+    <aside id="sidebar"
+        class="w-64 bg-[#252525] p-6 fixed h-full transition-transform transform -translate-x-64 md:translate-x-0 md:relative z-40 shadow-lg">
+        <h2 class="text-xl font-bold text-orange-400 mb-6">Patient Dashboard</h2>
+        <nav>
+            <ul class="space-y-3">
+                <li><button onclick="switchTab('dashboard')" id="dashboard-btn"
+                        class="w-full text-left px-4 py-3 rounded-lg transition duration-300">
+                        🏠 Dashboard</button></li>
+                <li><button onclick="switchTab('doctors')" id="doctors-btn"
+                        class="w-full text-left px-4 py-3 rounded-lg transition duration-300">
+                        👨‍⚕️ Assigned Doctors</button></li>
+                <li><button onclick="switchTab('medical-history')" id="medical-history-btn"
+                        class="w-full text-left px-4 py-3 rounded-lg transition duration-300">
+                        📜 Medical History</button></li>
+                <li><button onclick="switchTab('guardian')" id="guardian-btn"
+                        class="w-full text-left px-4 py-3 rounded-lg transition duration-300">
+                        👨‍👩‍👦 Guardian</button></li>
+                <li><button onclick="switchTab('change-password')" id="change-password-btn"
+                        class="w-full text-left px-4 py-3 rounded-lg transition duration-300">
+                        🔒 Change Password</button></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-8 ml-0 md:ml-14 transition-all duration-300" id="content">
+        <!-- Sidebar Toggle Button -->
+        <button id="menu-btn"
+            class="absolute top-6 left-6 md:hidden text-white bg-orange-500 px-3 py-2 rounded-lg shadow-lg">
+            ☰
+        </button>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content">
+            <div class="bg-[#1E1E1E] p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-semibold text-orange-400 mb-3">👤 Patient Details</h3>
+                <p><strong>Name:</strong> {{ user.username }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Medical History:</strong> {{ patient_history.medical_history }}</p>
+                <p><strong>Blood Group:</strong> {{ patient_history.blood_group }}</p>
+                <p><strong>Current Medications:</strong> {{ patient_history.current_medications }}</p>
+                <p><strong>Last Checkup Date:</strong> {{ patient_history.last_checkup_date }}</p>
+
+                {% comment %} <p><strong>Blood Group:</strong> {{ patient.blood_group }}</p>
+                <p><strong>Current Medications:</strong> {{ patient.current_medications }}</p>
+                <p><strong>Last Checkup Date:</strong> {{ patient.last_checkup_date }}</p> {% endcomment %}
+
+                <h3 class="text-lg font-semibold text-orange-400 mt-3">🚨 Emergency Contact</h3>
+                <p><strong>Name:</strong> {{ patient.emergency_contact_name }}</p>
+                <p><strong>Phone:</strong> {{ patient.emergency_contact_number }}</p>
+                <p><strong>Relation:</strong> {{ patient.emergency_contact_relation }}</p>
+            </div>
+        </div>
+
+        <!-- Assigned Doctors Tab -->
+        <div id="doctors" class="tab-content hidden">
+            <div class="bg-[#1E1E1E] p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-semibold text-orange-400 mb-3">🩺 Assigned Doctors</h3>
+                {% if doctors %}
+                    {% for doctor in doctors %}
+                        <div class="border-b border-gray-600 py-3">
+                            <p><strong>Name:</strong> {{ doctor.user.username }}</p>
+                            <p><strong>Specialization:</strong> {{ doctor.specialization }}</p>
+                            <p><strong>Experience:</strong> {{ doctor.experience }} years</p>
+                            <p><strong>Phone:</strong> {{ doctor.phone }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-red-400">No doctor assigned yet.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Medical History Tab -->
+        <div id="medical-history" class="tab-content hidden">
+            <div class="bg-[#1E1E1E] p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-semibold text-orange-400 mb-3">📜 Medical History</h3>
+                {% if patient_history %}
+                    <p><strong>Past Conditions:</strong> {{ patient_history.past_conditions }}</p>
+                    <p><strong>Allergies:</strong> {{ patient_history.allergies }}</p>
+                    <p><strong>Medications:</strong> {{ patient_history.medications }}</p>
+                    <p><strong>Last Checkup:</strong> {{ patient_history.last_checkup }}</p>
+                {% else %}
+                    <p class="text-red-400">No medical history available.</p>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    // Sidebar Toggle
+    const menuBtn = document.getElementById("menu-btn");
+    const sidebar = document.getElementById("sidebar");
+    const content = document.getElementById("content");
+
+    menuBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("-translate-x-64");
+        content.classList.toggle("ml-64");
+    });
+
+    // Tab Switching
+    function switchTab(tab) {
+        document.querySelectorAll(".tab-content").forEach((el) => el.classList.add("hidden"));
+        document.getElementById(tab).classList.remove("hidden");
+
+        // Update active button styling
+        document.querySelectorAll("nav button").forEach((btn) => {
+            btn.classList.remove("bg-orange-500", "text-white");
+            btn.classList.add("hover:bg-gray-700");
+        });
+
+        document.getElementById(`${tab}-btn`).classList.add("bg-orange-500", "text-white");
+    }
+
+    // Set default tab
+    switchTab("dashboard");
+</script>
+
+{% endblock %}

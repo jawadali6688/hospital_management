@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="flex h-screen bg-[#121212] text-gray-300 p-6">
+    <div class="w-full max-w-3xl mx-auto bg-[#1E1E1E] p-6 rounded-lg shadow-md">
+        <h3 class="text-xl font-bold text-orange-400 mb-4">📋 Medical History</h3>
+        
+        <p><strong>Patient:</strong> {{ patient.user.username }}</p>
+        
+       {% for medical_history in history %}
+       {% if medical_history %}
+       <div>
+        <p><strong>Past Conditions:</strong> {{ medical_history.past_conditions }}</p>
+       <p><strong>Allergies:</strong> {{ medical_history.allergies }}</p>
+       <p><strong>Medications:</strong> {{ medical_history.medications }}</p>
+       <p><strong>Last Checkup:</strong> {{ medical_history.last_checkup }}</p>
+   {% else %}
+       <p class="text-red-400">No medical history available.</p>
+   {% endif %}
+       </div>
+       {% endfor %}
+        
+        <a href="{% url 'guardian_dashboard' %}" class="text-orange-400 hover:underline mt-4 inline-block">
+            🔙 Back to Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}

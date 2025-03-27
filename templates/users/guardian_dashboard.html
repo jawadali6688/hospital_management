@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="flex h-screen bg-[#121212] text-gray-300">
+    <!-- Sidebar -->
+    <aside id="sidebar"
+        class="w-64 bg-[#1E1E1E] p-6 fixed h-full transition-transform transform -translate-x-64 md:translate-x-0 md:relative z-40 shadow-lg">
+        <h2 class="text-xl font-bold text-orange-400 mb-6">Guardian Dashboard</h2>
+        <nav>
+            <ul class="space-y-3">
+                <li><button onclick="switchTab('dashboard')" id="dashboard-btn"
+                        class="w-full text-left px-4 py-3 rounded-lg transition duration-300">
+                        🏠 Dashboard</button></li>
+                <li><button onclick="switchTab('patients')" id="patients-btn"
+                        class="w-full text-left px-4 py-3 rounded-lg transition duration-300">
+                        🩺 Assigned Patients</button></li>
+                
+                <li><button onclick="switchTab('chat')" id="chat-btn"
+                        class="w-full text-left px-4 py-3 rounded-lg transition duration-300">
+                        💬 Chat with Doctors</button></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-8 ml-0 md:ml-4 transition-all duration-300" id="content">
+        <!-- Sidebar Toggle Button -->
+        <button id="menu-btn"
+            class="absolute top-6 left-6 md:hidden text-white bg-orange-500 px-3 py-2 rounded-lg shadow-lg">
+            ☰
+        </button>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content">
+            <div class="bg-[#1E1E1E] p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-semibold text-orange-400 mb-3">👤 User Details</h3>
+                <p><strong>Name:</strong> {{ user.username }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+            </div>
+        </div>
+
+        <!-- Assigned Patients Tab -->
+        <div id="patients" class="tab-content hidden">
+            <div class="bg-[#1E1E1E] p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-semibold text-orange-400 mb-3">🩺 Assigned Patients</h3>
+                {% if patients %}
+                    <table class="w-full text-gray-300">
+                        <thead>
+                            <tr class="bg-gray-700">
+                                <th class="p-3 text-left">Name</th>
+                                <th class="p-3 text-left">DOB</th>
+                                <th class="p-3 text-left">Gender</th>
+                                <th class="p-3 text-left">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for patient in patients %}
+                                <tr class="border-b border-gray-700">
+                                    <td class="p-3">{{ patient.email }}</td>
+                                    <td class="p-3">{{ patient.date_of_birth }}</td>
+                                    <td class="p-3">{{ patient.gender }}</td>
+                                    <td class="p-3">
+                                        <a href="{% url 'view_patient_history' patient.id %}"
+                                            class="text-orange-400 hover:underline">
+                                            View History
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="text-red-400">No assigned patients found.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Medical History Tab -->
+        <div id="medical-history" class="tab-content hidden">
+            <div class="bg-[#1E1E1E] p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-semibold text-orange-400 mb-3">📋 Medical History</h3>
+                {% if patient_history %}
+                    {% for patient_id, history in patient_history.items %}
+                        <div class="mb-4 p-4 border border-gray-700 rounded">
+                            <h4 class="text-md font-semibold text-orange-300">{{ history.patient.name }}</h4>
+                            <p><strong>Past Conditions:</strong> {{ history.past_conditions }}</p>
+                            <p><strong>Allergies:</strong> {{ history.allergies }}</p>
+                            <p><strong>Medications:</strong> {{ history.medications }}</p>
+                            <p><strong>Last Checkup:</strong> {{ history.last_checkup }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-red-400">No medical history available.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Chat with Doctors Tab -->
+        <div id="chat" class="tab-content hidden">
+            <div class="bg-[#1E1E1E] p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-semibold text-orange-400 mb-3">💬 Chat with Doctors</h3>
+                <p class="text-gray-400">Feature coming soon! You’ll be able to chat with doctors in real-time.</p>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    // Sidebar Toggle
+    const menuBtn = document.getElementById("menu-btn");
+    const sidebar = document.getElementById("sidebar");
+    const content = document.getElementById("content");
+
+    menuBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("-translate-x-64");
+        content.classList.toggle("ml-4");
+    });
+
+    // Tab Switching
+    function switchTab(tab) {
+        document.querySelectorAll(".tab-content").forEach((el) => el.classList.add("hidden"));
+        document.getElementById(tab).classList.remove("hidden");
+
+        // Update active button styling
+        document.querySelectorAll("nav button").forEach((btn) => {
+            btn.classList.remove("bg-orange-500", "text-white");
+            btn.classList.add("hover:bg-gray-700");
+        });
+
+        document.getElementById(`${tab}-btn`).classList.add("bg-orange-500", "text-white");
+    }
+
+    // Set default tab
+    switchTab("dashboard");
+</script>
+
+{% endblock %}
