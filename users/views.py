@@ -108,7 +108,8 @@ def patient_dashboard(request):
 def guardian_dashboard(request):
     user = request.user  # Logged-in guardian user
     try:
-        guardian = user.guardian_profile  
+        guardian = user.guardian_profile
+        g_profile = guardian = Guardian.objects.filter(user=user).first()  
         patients = guardian.assigned_patients.all() 
     except Guardian.DoesNotExist:
         patients = []  
@@ -118,6 +119,7 @@ def guardian_dashboard(request):
     context = {
         'user': user,
         'patients': patients,
+        'guardian': g_profile
     }
     
     return render(request, 'users/guardian_dashboard.html', context)
@@ -128,10 +130,7 @@ def guardian_dashboard(request):
 def view_patient_history(request, patient_id):
     # Ensure the patient exists
     patient = get_object_or_404(Patient, id=patient_id)
-    
-    # Retrieve all medical history records associated with this patient
-    history = MedicalHistory.objects.filter(patient=patient) # Assuming there's a date field
-    print(history[0].allergies, "historyyyy")
+    history = MedicalHistory.objects.filter(patient=patient) 
     return render(request, 'users/view_patient_history.html', {'patient': patient, 'history': history})
 
 

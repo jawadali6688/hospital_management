@@ -97,7 +97,7 @@ class CustomUser(AbstractUser):
         ('patient', 'Patient'),
         ('guardian', 'Guardian'),
     ]
-
+    full_name = models.TextField(max_length=100, blank=False)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, blank=True, default='')
 
     def save(self, *args, **kwargs):
@@ -154,8 +154,7 @@ class Guardian(models.Model):
         return f"{self.user.username} (Guardian)"
 class Patient(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="patient_profile")
-    medical_history = models.OneToOneField("MedicalHistory", on_delete=models.SET_NULL, null=True, blank=True, related_name="patient_history")  # ✅ FIXED related_name
-    
+    medical_history = models.OneToOneField("MedicalHistory", on_delete=models.SET_NULL, null=True, blank=True, related_name="patient_history") 
     date_of_birth = models.DateField(null=True, blank=True)
     gender = models.CharField(max_length=10, choices=[("male", "Male"), ("female", "Female"), ("other", "Other")], null=True, blank=True)
     contact_number = models.CharField(max_length=15, null=True, blank=True)
@@ -164,17 +163,9 @@ class Patient(models.Model):
         ("A+", "A+"), ("A-", "A-"), ("B+", "B+"), ("B-", "B-"),
         ("O+", "O+"), ("O-", "O-"), ("AB+", "AB+"), ("AB-", "AB-")
     ], null=True, blank=True)
-    
-    allergies = models.TextField(null=True, blank=True)
-    current_medications = models.TextField(null=True, blank=True)
-    last_checkup_date = models.DateField(null=True, blank=True)
-    
     emergency_contact_name = models.CharField(max_length=100, null=True, blank=True)
     emergency_contact_number = models.CharField(max_length=15, null=True, blank=True)
     emergency_contact_relation = models.CharField(max_length=50, null=True, blank=True)
-    admission_date = models.DateTimeField(null=True, blank=True)
-    discharge_date = models.DateTimeField(null=True, blank=True)
-
     assigned_doctors = models.ManyToManyField(Doctor, blank=True, related_name="patients")
     guardian = models.ForeignKey(Guardian, on_delete=models.SET_NULL, null=True, blank=True, related_name="guardian_patients")
 
@@ -184,12 +175,15 @@ class Patient(models.Model):
 
 
 class MedicalHistory(models.Model):
-    patient = models.OneToOneField(Patient, on_delete=models.CASCADE, related_name="medical_record")  # ✅ FIXED related_name
+    patient = models.OneToOneField(Patient, on_delete=models.CASCADE, related_name="medical_record")
     past_conditions = models.TextField(null=True, blank=True)
     allergies = models.TextField(null=True, blank=True)
     medications = models.TextField(null=True, blank=True)
     last_checkup = models.DateField(null=True, blank=True)
-
+    admission_date = models.DateTimeField(null=True, blank=True)
+    discharge_date = models.DateTimeField(null=True, blank=True)
+    current_medications = models.TextField(null=True, blank=True)
+    last_checkup_date = models.DateField(null=True, blank=True)
     def __str__(self):
         return f"Medical History of {self.patient.user.username}"
 
