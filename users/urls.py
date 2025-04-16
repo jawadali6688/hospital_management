@@ -30,7 +30,11 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views  #  Import all views from the app
 
+
+
+
 urlpatterns = [
+    
     # Registration & Dashboard
     path("register/", views.register, name="register"),
     path("accounts/", views.dashboard_redirect, name="dashboard_redirect"),

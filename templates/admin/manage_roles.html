@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Temporary Roles{% endblock %}
+
+{% block content %}
+<div class="p-6">
+    <h1 class="text-2xl font-bold mb-4">Manage Temporary Roles</h1>
+
+    <table class="table w-full bg-white shadow-lg">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Role</th>
+                <th>Expires On</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for assignment in assignments %}
+            <tr>
+                <td>{{ assignment.user.username }}</td>
+                <td>{{ assignment.role }}</td>
+                <td>{{ assignment.expiry_date }}</td>
+                <td>
+                    <form method="POST" action="{% url 'revoke_role' assignment.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-error">Revoke</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

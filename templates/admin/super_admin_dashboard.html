@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Super Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="p-6">
+    <h1 class="text-2xl font-bold mb-4">Super Admin Dashboard</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Assign Roles -->
+        <div class="card bg-base-200 shadow-xl p-6">
+            <h2 class="text-xl font-bold">Assign Temporary Roles</h2>
+            <p class="text-gray-500">Grant temporary admin/doctor privileges to users.</p>
+            <a href="{% url 'assign_roles' %}" class="btn btn-primary mt-4">Assign Roles</a>
+        </div>
+
+        <!-- Manage Temporary Roles -->
+        <div class="card bg-base-200 shadow-xl p-6">
+            <h2 class="text-xl font-bold">Manage Temporary Roles</h2>
+            <p class="text-gray-500">View, edit, or revoke temporary assignments.</p>
+            <a href="{% url 'manage_roles' %}" class="btn btn-accent mt-4">Manage Roles</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

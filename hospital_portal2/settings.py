@@ -9,13 +9,15 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
 from pathlib import Path
+from dotenv import load_dotenv  # Import dotenv
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-import os  #  Ensure karein os import ho
+# Load environment variables from .env
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -26,12 +28,15 @@ SECRET_KEY = 'django-insecure-ut@*k@e3(^q$f^odg4xs!!h5k(+ty1%s)m5q62#$t%73$3=$lf
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    
+    'daphne', 
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,8 +44,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users',
-    
+    'hospital_chat', 
 ]
+
+
+
+
+
+    
 
 
 MIDDLEWARE = [
@@ -72,7 +83,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'hospital_portal2.wsgi.application'
+# WSGI_APPLICATION = 'hospital_portal2.wsgi.application'
 
 
 # Database
@@ -89,6 +100,19 @@ WSGI_APPLICATION = 'hospital_portal2.wsgi.application'
 #     }
 # }
 
+# ASGI Application
+ASGI_APPLICATION = "hospital_portal2.asgi.application"
+
+# WebSocket Backend (for in-memory communication, we can use Redis later)
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
+
 
 DATABASES = {
     'default': {
@@ -98,13 +122,15 @@ DATABASES = {
 }
 
 # SMTP Email Settings
+SECRET_KEY = os.getenv("SECRET_KEY", "fallback-secret-key")  # Fallback if .env is missing
+DEBUG = os.getenv("DEBUG") == "True"
+
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "nawazfatima@gmail.com"  # Apna Gmail address yahan likho
-EMAIL_HOST_PASSWORD = "uurotjnjoauehpqj"  # Google App Password use karo
-
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')  # Secure way
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD') 
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

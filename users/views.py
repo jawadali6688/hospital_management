@@ -9,6 +9,12 @@ from .models import TemporaryRole, Patient, Doctor, Guardian, MedicalHistory
 from users.decorators import role_required
 from .forms import UserRegisterForm
 
+
+
+
+def super_admin_dashboard(request):
+    return render(request, "users/admin/super_admin_dashboard.html")
+
 def home(request):
     return render(request, 'home.html')
 
@@ -49,31 +55,6 @@ def assign_temporary_role(request):
 @login_required
 def dashboard_view(request):
     return render(request, 'users/dashboard.html')
-
-
-# Doctor Dashboard (Only Doctors Allowed)
-# @login_required
-# @role_required(allowed_roles=['doctor'])
-# def doctor_dashboard(request):
-#     if request.user.role != 'doctor':
-#         return HttpResponseForbidden("searching....")
-
-#     # Iss doctor ke assigned patients
-#     patients = Patient.objects.filter(assigned_doctor=request.user.doctor_profile)
-
-#     return render(request, 'users/doctor_dashboard.html', {'patients': patients})
-
-# @login_required
-# @role_required(allowed_roles=['doctor'])
-# def doctor_dashboard(request):
-#     # Ensure user has a doctor profile
-#     if not hasattr(request.user, 'doctor_profile'):
-#         return HttpResponseForbidden("You do not have permission to access this page.")
-
-#     # Fetch assigned patients for the logged-in doctor
-#     patients = Patient.objects.filter(assigned_doctors=request.user)
-
-#     return render(request, 'users/doctor_dashboard.html', {'patients': patients})
 @login_required
 @role_required(allowed_roles=['doctor'])
 def doctor_dashboard(request):
@@ -133,23 +114,6 @@ def view_patient_history(request, patient_id):
     history = MedicalHistory.objects.filter(patient=patient) # Assuming there's a date field
     print(history[0].allergies, "historyyyy")
     return render(request, 'users/view_patient_history.html', {'patient': patient, 'history': history})
-
-
-
-# @login_required
-# @role_required(allowed_roles=['doctor', 'admin', 'super_admin'])
-# def view_patient_history(request, patient_id):
-#     patient = get_object_or_404(Patient, id=patient_id)
-
-#     print("Assigned Doctors:", patient.assigned_doctors.all())  
-#     print("Current Doctor Profile:", request.user.doctor_profile)
-    
-#     if request.user.role == 'doctor' and request.user.doctor_profile not in patient.assigned_doctors.all():
-#         return HttpResponseForbidden("You do not have permission to view this patient's history.")
-
-#     return render(request, 'users/view_patient_history.html', {'patient': patient})
-
-
 
 
 @login_required
